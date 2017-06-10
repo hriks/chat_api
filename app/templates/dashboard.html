@@ -40,8 +40,15 @@ Dashboard
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href=""><b>Private Users</b><span class="sr-only">(current)</span></a></li>
-            {% for i in users %}
-            <li><a href="#">{{ i.username|upper }}</a></li>
+            {% for user in users %}
+            <li><a href="#">{{ user.username|upper }}
+            {% if user.is_active %}
+            <i style="color: green">
+            online
+            </i></a></li>
+            {% else %}
+            <i style="color: red">offline</i></a></li>
+            {% endif %}
             {% endfor %}
           </ul>
           <ul class="nav nav-sidebar">
