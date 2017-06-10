@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager,\
     login_user, login_required, logout_user, current_user
-from .. import app, User, db
+from .. import app, User, db, Group
 from forms import LoginForm, RegisterForm
 from flask import session, request
 from . import main
@@ -22,7 +22,7 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    if current_user:
+    if 'logged' in session:
         return redirect(url_for('dashboard'))
     return render_template('index.html')
 
@@ -41,6 +41,7 @@ def login():
                 ).first()
                 admin.is_active = True
                 db.session.commit()
+                session['logged'] = 'YES'
                 if current_user:
                     return redirect(url_for('dashboard'))
                 return redirect(url_for('login'))
@@ -76,10 +77,12 @@ def signup():
 @login_required
 def dashboard():
     users = User.query.order_by(User.username)
+    groups = Group.query.order_by(Group.username)
     return render_template(
         'dashboard.html',
         name=current_user.username,
-        users=users
+        users=users,
+        groups=groups
     )
 
 
@@ -89,5 +92,6 @@ def logout():
     user = User.query.filter_by(username=str(current_user.username)).first()
     user.is_active = False
     db.session.commit()
+    session.clear()
     logout_user()
     return redirect(url_for('index'))
