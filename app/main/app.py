@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager,\
     login_user, login_required, logout_user, current_user
-from .. import app, User, db, Group
+from .. import app, User, db, Group, Group_user
 from forms import LoginForm, RegisterForm
 from flask import session, request
 from . import main
@@ -73,16 +73,38 @@ def signup():
     return render_template('signup.html', form=form)
 
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    if request.method == 'POST':
+        name = current_user.username
+        session['name'] = str(name)
+        room = str(request.form['submit'])
+        groups_users = Group_user.query.order_by(Group_user.username)
+        for user in groups_users:
+            if str(user.group) != room:
+                if str(user.group) != current_user.username:
+                    new_group = Group_user(
+                        username=session['name'],
+                        group=session['room']
+                    )
+                    db.session.add(new_group)
+                    db.session.commit()
+            continue
+        for user in groups_users:
+            if str(user.group) == str(current_user.username):
+                session['room'] = str(current_user.username)
+            elif str(user.group) == room:
+                session['room'] = room
+        print session['room']
     users = User.query.order_by(User.username)
     groups = Group.query.order_by(Group.username)
     return render_template(
         'dashboard.html',
         name=current_user.username,
         users=users,
-        groups=groups
+        groups=groups,
+        session=session,
     )
 
 
