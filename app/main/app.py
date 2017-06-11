@@ -6,7 +6,6 @@ from flask_login import LoginManager,\
 from .. import app, User, db, Group, Group_user
 from forms import LoginForm, RegisterForm
 from flask import session, request
-from . import main
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 Bootstrap(app)
@@ -117,3 +116,10 @@ def logout():
     session.clear()
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/pop')
+@login_required
+def pop():
+    session.pop('room', '')
+    return redirect(url_for('dashboard'))
