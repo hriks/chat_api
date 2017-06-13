@@ -108,10 +108,31 @@ Dashboard
           </ul>
           <ul class="nav nav-sidebar">
             <li class="active"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
-            {% for i in groups %}
-            <li><a href="#">{{ i.username|upper }}</a></li>
+            {% for group in groups %}
+            <li>
+            <table>
+              <tr>
+                <td>
+                  <form action = "group" method= POST >
+                    <button name="submit" value={{group}} type="submit">
+                       <i>{{ group|upper }}</i>
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <form action = "add" method= POST >
+                    <button name="submit" value={{group}} type="submit" style="width: 60%">
+                       <i> + </i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+
+            </table>
+              
+            </li>
             {% endfor %}
-            <li><a href=""> <b>+</b> Add Groups</a></li>
+            <li><a href="{{ url_for('group_chat') }}"> <b>+</b> Add Groups</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -144,7 +165,7 @@ Dashboard
           {% if 'room' in session %}
           <div class="table-responsive">
           <h1>Chat Box:</h1>
-            <textarea id="chat" cols="80" rows="20"></textarea>
+            <textarea id="chat" cols="60" rows="10" readonly></textarea>
                <br>
                <br>
              <input id="text" size="80" placeholder="Enter your message here"><br><br>

@@ -18,14 +18,14 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
     is_active = db.Column(db.Boolean, unique=False, default=False)
-    usernames = db.relationship('Group', backref='owner', lazy='dynamic')
+    usernames = db.relationship('Group_user', backref='owner', lazy='dynamic')
 
 
 class Group(UserMixin, db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
-    group = db.Column(db.String(15), unique=True)
-    username = db.Column(db.String(15), db.ForeignKey('user.username'))
+    id = db.Column(db.Integer, primary_key=True, unique=False)
+    group = db.Column(db.String(15), unique=False)
+    username = db.Column(db.String(15))
 
 
 class Group_user(UserMixin, db.Model):
