@@ -24,7 +24,7 @@ class User(UserMixin, db.Model):
 class Group(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    group = db.Column(db.String(15), unique=False)
+    group = db.Column(db.String(15), unique=True)
     username = db.Column(db.String(15), db.ForeignKey('user.username'))
 
 
@@ -33,7 +33,6 @@ class Group_user(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user1 = db.Column(db.String(15), unique=False)
     user2 = db.Column(db.String(15), db.ForeignKey('user.username'))
-
 
 
 def create_app(debug=False):
