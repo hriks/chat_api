@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager,\
     login_user, login_required, logout_user, current_user
 from .. import app, User, db, Group, Group_user
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, GroupForm, AddForm
 from flask import session, request
 from sqlalchemy import or_
 
@@ -78,13 +78,65 @@ def signup():
 def dashboard():
     users = User.query.order_by(User.username)
     groups = Group.query.order_by(Group.username)
+    groups_list = []
+    for group in groups:
+        groups_list.append(group.group)
+    group_set = set(groups_list)
+    print group_set
     return render_template(
         'dashboard.html',
         name=current_user.username,
         users=users,
-        groups=groups,
+        groups=group_set,
         session=session,
     )
+
+
+@app.route('/group', methods=['GET', 'POST'])
+@login_required
+def group():
+    group_chat = request.form['submit']
+    groups = Group.query.order_by(Group.group)
+    for group in groups:
+        if group.group == group_chat:
+            session['room'] = str(group.group)
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/add', methods=['GET', 'POST'])
+@login_required
+def add():
+    users = User.query.order_by(User.username)
+    group_name = request.form['submit']
+    return render_template(
+        'add.html',
+        users=users,
+        group_name=group_name,
+    )
+
+
+@app.route('/add_member', methods=['GET', 'POST'])
+@login_required
+def add_member():
+    if request.method == 'POST':
+        group_name = str(request.form['group'])
+        member = str(request.form['submit'])
+        print member, group_name
+        groups = Group.query.order_by(Group.group)
+        for group in groups:
+            if group_name == group.group and member == group.username:
+                userd = 'YES'
+            else:
+                userd = 'No'
+        if userd == 'No':
+            group_member = Group(
+                group=group_name,
+                username=member
+            )
+            db.session.add(group_member)
+            db.session.commit()
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/private_chat', methods=['GET', 'POST'])
@@ -92,11 +144,20 @@ def dashboard():
 def private_chat():
     users = User.query.order_by(User.username)
     groups = Group.query.order_by(Group.username)
+    groups_list = []
+    for group in groups:
+        groups_list.append(group.group)
+    group_set = set(groups_list)
     if request.method == 'POST':
         name = current_user.username
         session['name'] = str(name)
         room = str(request.form['submit'])
-        groups_users = Group_user.query.filter(or_(Group_user.user1==current_user.username, Group_user.user2==current_user.username)) # noqa
+        groups_users = Group_user.query.filter(
+            or_(
+                Group_user.user1 == current_user.username,
+                Group_user.user2 == current_user.username
+            )
+        )
         for user in groups_users:
             if (
                 str(user.user1) == str(
@@ -117,6 +178,12 @@ def private_chat():
             )
             db.session.add(new_group)
             db.session.commit()
+            groups_users = Group_user.query.filter(
+                or_(
+                    Group_user.user1 == current_user.username,
+                    Group_user.user2 == current_user.username
+                )
+            )
             session['room'] = str(user.id)
         for user in groups_users:
             if (
@@ -131,8 +198,44 @@ def private_chat():
         'dashboard.html',
         name=current_user.username,
         users=users,
-        groups=groups,
+        groups=group_set,
         session=session,
+    )
+
+
+@app.route('/group_chat', methods=['GET', 'POST'])
+@login_required
+def group_chat():
+    form = GroupForm()
+    users = User.query.order_by(User.username)
+
+    if form.validate_on_submit():
+        if request.method == 'POST':
+            name = str(current_user.username)
+            print name
+            group_name = str(request.form['groupname'])
+            print group_name
+            member = str(request.form['submit'])
+            print member
+            group_member1 = Group(
+                group=group_name,
+                username=name
+            )
+
+            db.session.add(group_member1)
+            db.session.commit()
+            group_member2 = Group(
+                group=group_name,
+                username=member
+            )
+            db.session.add(group_member2)
+            db.session.commit()
+            return redirect(url_for('dashboard'))
+    return render_template(
+        'group.html',
+        form=form,
+        session=session,
+        users=users
     )
 
 
@@ -142,8 +245,8 @@ def logout():
     user = User.query.filter_by(username=str(current_user.username)).first()
     user.is_active = False
     db.session.commit()
-    session.clear()
     logout_user()
+    session.clear()
     return redirect(url_for('index'))
 
 

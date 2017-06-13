@@ -27,3 +27,19 @@ class RegisterForm(Form):
                            InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[
                              InputRequired(), Length(min=8, max=80)])
+
+
+class GroupForm(Form):
+    groupname = StringField(
+        'Group Name', validators=[
+            InputRequired(), Length(min=4, max=15)
+        ]
+    )
+
+
+class AddForm(Form):
+    member = StringField(
+        'Member Name', validators=[
+            InputRequired(), Length(min=4, max=15)
+        ]
+    )

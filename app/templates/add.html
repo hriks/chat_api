@@ -1,0 +1,32 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Sign Up
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <form class="form-signin" method="POST" action="add_member">
+    <h2 class="form-signin-heading">Add New Member</h2>
+    Group Name: <br>
+    <input type="text" name="group" value={{group_name}} readonly>
+    {% for user in users %}
+    {% if user.username != current_user.username %}
+    <button class="btn btn-lg btn-primary btn-block" value={{user.username}} type="submit" name=submit>
+    Add {{user.username|upper}}
+    </button>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <br>
+    Note: Add one member to create a group later add other members
+  </form>
+
+</div> <!-- /container -->
+{% endblock %}
