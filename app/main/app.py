@@ -97,30 +97,36 @@ def private_chat():
         session['name'] = str(name)
         room = str(request.form['submit'])
         groups_users = Group_user.query.filter(or_(Group_user.user1==current_user.username, Group_user.user2==current_user.username)) # noqa
-        import pdb; pdb.set_trace()
         for user in groups_users:
-            # session['room'] = str(user.id)
             if (
-                str(user.user1) != str(
+                str(user.user1) == str(
                     current_user.username) and str(
-                    user.user2) != room) or (str(
-                    user.user1) != room and str(user.user2) != str(
+                    user.user2) == room) or (str(
+                    user.user1) == room and str(user.user2) == str(
                     current_user.username)
             ):
-                new_group = Group_user(
-                    user2=session['name'],
-                    user1=room
-                )
-                db.session.add(new_group)
-                db.session.commit()
+                userd = 'YES'
                 session['room'] = str(user.id)
-#        for user in groups_users:
-#            if str(user.user1) == str(
-#                current_user.username) or str(
-#                    user.user1) == str(current_user.username):
-#                if str(user.user1) == room or str(user.user2) == room:
-#                    session['room'] = str(user.id)
-#        print session['room']
+                break
+            else:
+                userd = 'No'
+        if userd == 'No':
+            new_group = Group_user(
+                user2=session['name'],
+                user1=room
+            )
+            db.session.add(new_group)
+            db.session.commit()
+            session['room'] = str(user.id)
+        for user in groups_users:
+            if (
+                str(user.user1) == str(
+                    current_user.username) and str(
+                    user.user2) == room) or (str(
+                    user.user1) == room and str(user.user2) == str(
+                    current_user.username)
+            ):
+                    session['room'] = str(user.id)
     return render_template(
         'dashboard.html',
         name=current_user.username,
