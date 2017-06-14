@@ -3,39 +3,39 @@
 {% block head %}
 {{super()}}
 <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-        <script type="text/javascript" charset="utf-8">
-            var socket;
-            $(document).ready(function(){
-                socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
-                socket.on('connect', function() {
-                    socket.emit('joined', {});
-                });
-                socket.on('status', function(data) {
-                    $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
-                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
-                });
-                socket.on('message', function(data) {
-                    $('#chat').val($('#chat').val() + data.msg + '\n');
-                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
-                });
-                $('#text').keypress(function(e) {
-                    var code = e.keyCode || e.which;
-                    if (code == 13) {
-                        text = $('#text').val();
-                        $('#text').val('');
-                        socket.emit('text', {msg: text});
-                    }
-                });
-            });
-            function leave_room() {
-                socket.emit('left', {}, function() {
-                    socket.disconnect();
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+  var socket;
+  $(document).ready(function(){
+      socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+      socket.on('connect', function() {
+          socket.emit('joined', {});
+      });
+      socket.on('status', function(data) {
+          $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+          $('#chat').scrollTop($('#chat')[0].scrollHeight);
+      });
+      socket.on('message', function(data) {
+          $('#chat').val($('#chat').val() + data.msg + '\n');
+          $('#chat').scrollTop($('#chat')[0].scrollHeight);
+      });
+      $('#text').keypress(function(e) {
+          var code = e.keyCode || e.which;
+          if (code == 13) {
+              text = $('#text').val();
+              $('#text').val('');
+              socket.emit('text', {msg: text});
+          }
+      });
+  });
+  function leave_room() {
+      socket.emit('left', {}, function() {
+          socket.disconnect();
 
-                    // go back to the login page
-                    window.location.href = "{{ url_for('pop') }}";
-                });
-            }
+        // go back to the login page
+          window.location.href = "{{ url_for('pop') }}";
+      });
+  }
 </script>
 {% endblock %}
 
@@ -45,129 +45,176 @@ Dashboard
 
 {% block styles %}
 {{super()}}
+<style type="text/css">
+.expand {
+    width: 100px;
+    height: 50px;
+    background: red;
+    -webkit-transition: width 0.50s, height 0.5s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.5s, height 0.5s;
+}
+.expand:hover {
+    width: 200px;
+    height: 100px;
+}
+.hriks_shadow:hover
+{
+
+box-shadow: 12px 13px 0px rgba(204, 211, 51, 0.38),
+-11px -14px 0px rgba(241, 96, 0, 0.28),
+18px -24px 0px rgba(0, 0, 0, 0.34),
+33px -6px 0px rgba(39, 74, 214, 0.28);
+}
+.hriks_style {
+background: #333;
+color: #ccc;
+padding: 6px 15px 6px 35px;
+transition: 500ms all ease;
+border: 1px solid #333;
+box-sizing: border-box;
+border: 2px solid #ccc;
+border-radius: 4px;
+resize: none;
+font-family: Arial;
+}
+.font{
+  font-family: Arial;
+}
+.button {
+    background-color: #2196F3; /* Green */
+    border: none;
+    color: white;
+    padding: 4px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 2px 1px;
+    cursor: pointer;
+}
+.group:hover {background-color: #0b7dda;}
+.curve:hover {background-color: #f44336;}
+.curve {
+  border-radius: 50%;
+  background-color: red;
+}
+
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
 {% endblock %}
 
 {% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">CHAT API</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active">
-              <a href="">
-                <b>Available Users</b>
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">CHAT API</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li class="active">
+          <a href="">
+            <b>Available Users</b>
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
 {% for user in users %}
-            <li><a href="">
-  {% if user.username == current_user.username %}
-              <button name="submit" type="submit" style="width: 30%">
-                <i>{{user.username|upper}}</i>
-              </button>
-  {% else %}
+        <li><a href="">
+        <table><tr>
+        <td>
+{% if user.is_active %}
+        <i style="color: green">&#9673;</i>
+{% else %}
+        <i style="color: red">&#9673;</i>
+{% endif %}
+</td>
+<td>
+{% if user.username == current_user.username %}
+            <button class="button group w3-round-xxlarge" name="submit" type="submit" style="width: 100%">
+              <i>{{user.username|upper}}</i>
+            </button>
+{% else %}
             <form action="private_chat" method= POST >
-              <button name="submit" value={{user.username}} type="submit" style="width: 30%">
+            <button class="button group w3-round-xxlarge" name="submit" value={{user.username}} type="submit" style="width: 100%">
                 <i>{{user.username|upper}}</i>
               </button>
             </form>
- {% endif %}
- {% if user.is_active %}
-            <i style="color: green">
-            online
-            </i></a></li>
-  {% else %}
-            <i style="color: red">offline</i></a></li>
-  {% endif %}
+{% endif %}
+</td></tr></table></a></li>
 {% endfor %}
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
-            {% for group in groups %}
-            <li>
-            <table>
-              <tr>
-                <td>
-                  <form action = "group" method= POST >
-                    <button name="submit" value={{group}} type="submit">
-                       <i>{{ group|upper }}</i>
-                    </button>
-                  </form>
-                </td>
-                <td>
-                  <form action = "add" method= POST >
-                    <button name="submit" value={{group}} type="submit" style="width: 60%">
-                       <i> + </i>
-                    </button>
-                  </form>
-                </td>
-              </tr>
-
-            </table>
-              
-            </li>
-            {% endfor %}
-            <li><a href="{{ url_for('group_chat') }}"> <b>+</b> Add Groups</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Welcome, {{ name }}</h1>
-
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-          </div>
-
-          <h2 class="sub-header">Section title</h2>
-          {% if 'room' in session %}
-          <div class="table-responsive">
-          <h1>Chat Box:</h1>
-            <textarea id="chat" cols="60" rows="10" readonly></textarea>
-               <br>
-               <br>
-             <input id="text" size="80" placeholder="Enter your message here"><br><br>
-              <a href="#" onclick="leave_room();">close chat</a>
-          </div>
-          {% endif %}
-        </div>
-      </div>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li class="active"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
+{% for group in groups %}
+        <li><a>
+          <table>
+            <tr>
+              <td>
+                <form action = "group" method= POST >
+                  <button class="button group w3-round-xxlarge" name="submit" value={{group}} type="submit" style="width: 120%">
+                    <i>{{ group|upper }}</i>
+                  </button>
+                </form>
+              </td>
+              <td>
+                <form action = "add" method= POST >
+                  <button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" value={{group}} type="submit">
+                    +
+                  </button>
+                </form>
+              </td>
+            </tr>
+           </table>
+           </a>
+        </li>
+{% endfor %}
+        <li><a href="{{ url_for('group_chat') }}"> <b>+</b> Add Groups</a></li>
+      </ul>
     </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Welcome, {{ name }}</h1>
+
+      <div class="row placeholders">
+        <div class="col-xs-6 col-sm-6 placeholder">
+          Your Registered Email is 
+
+          Click on User / Group
+        </div>
+{% if 'room' in session %}
+      <div class="table-responsive">
+      <div class="w3-container w3-center w3-animate-bottom">
+        <h1 class="font">CHAT BOXX</h1>
+        <textarea class ="hriks_style" id="chat" cols="50" rows="16" readonly></textarea>
+<br>
+        <input class="hriks_shadow hriks_style" id="text" size="35" style="height:40px" placeholder="Enter your message here">
+          <a href="/" onclick="leave_room();" class="button curve">
+              close chat
+          </a>
+      </div>
+      </div>
+
+{% endif %}
+    </div>
+
+    </div>
+  </div>
+</div>
+
 {% endblock %}
