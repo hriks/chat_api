@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager,\
     login_user, login_required, logout_user, current_user
 from .. import app, User, db, Group, Group_user
-from forms import LoginForm, RegisterForm, GroupForm, AddForm
+from forms import LoginForm, RegisterForm, GroupForm
 from flask import session, request
 from sqlalchemy import or_
 

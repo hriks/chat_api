@@ -35,11 +35,3 @@ class GroupForm(Form):
             InputRequired(), Length(min=4, max=15)
         ]
     )
-
-
-class AddForm(Form):
-    member = StringField(
-        'Member Name', validators=[
-            InputRequired(), Length(min=4, max=15)
-        ]
-    )
