@@ -47,62 +47,55 @@ Dashboard
 {{super()}}
 <style type="text/css">
 .expand {
-    width: 100px;
-    height: 50px;
-    background: red;
-    -webkit-transition: width 0.50s, height 0.5s; /* For Safari 3.1 to 6.0 */
+    width: 100px; height: 50px; background: red;
+    -webkit-transition: width 0.50s, height 0.5s;
     transition: width 0.5s, height 0.5s;
 }
-.expand:hover {
-    width: 200px;
-    height: 100px;
-}
+.expand:hover { width: 200px; height: 100px;}
 .hriks_shadow:hover
 {
-
 box-shadow: 12px 13px 0px rgba(204, 211, 51, 0.38),
 -11px -14px 0px rgba(241, 96, 0, 0.28),
 18px -24px 0px rgba(0, 0, 0, 0.34),
 33px -6px 0px rgba(39, 74, 214, 0.28);
 }
 .hriks_style {
-background: #333;
-color: #ccc;
-padding: 6px 15px 6px 35px;
-transition: 500ms all ease;
-border: 1px solid #333;
-box-sizing: border-box;
-border: 2px solid #ccc;
-border-radius: 4px;
-resize: none;
-font-family: Arial;
+background: #333; color: #ccc; padding: 6px 15px 6px 35px; transition: 500ms all ease;
+border: 1px solid #333; box-sizing: border-box; border: 2px solid #ccc; border-radius: 4px;
+resize: none; font-family: Arial;
 }
 .font{
-  font-family: Arial;
+  font-family: 'Frijole';font-size: 22px;
 }
 .button {
-    background-color: #2196F3; /* Green */
-    border: none;
-    color: white;
-    padding: 4px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
-    margin: 2px 1px;
-    cursor: pointer;
+    background-color: #333; 
+    border: none; color: white; padding: 4px 16px; text-align: center;
+    text-decoration: none; display: inline-block; font-size: 12px;
+    margin: 2px 1px; cursor: pointer;
 }
 .group:hover {background-color: #0b7dda;}
 .curve:hover {background-color: #f44336;}
 .curve {
-  border-radius: 50%;
-  background-color: red;
+  border-radius: 50%; background-color: red;
 }
+.hriks{
+  font-family: 'Bungee Inline';font-size: 22px;
+}
+.user{font-family: 'Nosifer'; background:#333; color: white}
+
 
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
 <link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+<link href='https://fonts.googleapis.com/css?family=Henny Penny' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Bungee Inline' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Caveat' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Frijole' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Nosifer' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Joti One' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Chewy' rel='stylesheet'>
 {% endblock %}
 
 {% block content %}
@@ -115,12 +108,13 @@ font-family: Arial;
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">CHAT API</a>
+      <a class="navbar-brand" style="font-family: 'Henny Penny';font-size: 22px;"" href="/">CHAT API</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+        <li class="hriks"><a href="/">Dashboard</a></li>
+        <li class="hriks"><a href="/">{{current_user.username}}</a></li>
+        <li class="hriks"><a href="{{ url_for('logout') }}">Log Out</a></li>
       </ul>
     </div>
   </div>
@@ -129,31 +123,31 @@ font-family: Arial;
   <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
       <ul class="nav nav-sidebar">
-        <li class="active">
+        <li class="user">
           <a href="">
             <b>Available Users</b>
             <span class="sr-only">(current)</span>
           </a>
         </li>
 {% for user in users %}
-        <li><a href="">
+        <li style="font-family: 'Joti One';font-size: 22px;"><a href="">
         <table><tr>
         <td>
 {% if user.is_active %}
-        <i style="color: green">&#9673;</i>
+        <span style="color: green;font-size: 16px;">&#9673;</span>
 {% else %}
-        <i style="color: red">&#9673;</i>
+        <span style="color: red; font-size: 16px;">&#9673;</span>
 {% endif %}
 </td>
 <td>
 {% if user.username == current_user.username %}
-            <button class="button group w3-round-xxlarge" name="submit" type="submit" style="width: 100%">
-              <i>{{user.username|upper}}</i>
+            <button class="button group w3-round-xxlarge" name="submit" type="submit" style="width: 100px">
+              {{user.username|upper}}
             </button>
 {% else %}
             <form action="private_chat" method= POST >
-            <button class="button group w3-round-xxlarge" name="submit" value={{user.username}} type="submit" style="width: 100%">
-                <i>{{user.username|upper}}</i>
+            <button class="button group w3-round-xxlarge" name="submit" value={{user.username}} type="submit" style="width: 100px">
+                {{user.username|upper}}
               </button>
             </form>
 {% endif %}
@@ -161,15 +155,15 @@ font-family: Arial;
 {% endfor %}
       </ul>
       <ul class="nav nav-sidebar">
-        <li class="active"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
+        <li class="user"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
 {% for group in groups %}
-        <li><a>
+        <li style="font-family: 'Joti One';font-size: 22px;"><a>
           <table>
             <tr>
               <td>
                 <form action = "group" method= POST >
                   <button class="button group w3-round-xxlarge" name="submit" value={{group}} type="submit" style="width: 120%">
-                    <i>{{ group|upper }}</i>
+                    {{ group|upper }}
                   </button>
                 </form>
               </td>
@@ -185,23 +179,33 @@ font-family: Arial;
            </a>
         </li>
 {% endfor %}
-        <li><a href="{{ url_for('group_chat') }}"> <b>+</b> Add Groups</a></li>
+        <li><a href="{{ url_for('group_chat') }}"> <button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" type="submit">
+                   <b>&#10133;</b>
+                  </button></a></li>
       </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Welcome, {{ name }}</h1>
+      <h1 class="page-header"><span style="font-family: Tangerine, serif; font-size: 22 "><b>Welcome {{ name|title }},<b></span></h1>
 
       <div class="row placeholders">
         <div class="col-xs-6 col-sm-6 placeholder">
-          Your Registered Email is 
+        <div><img src="static/codeman.jpg" height="250" width="350"></div><br>
+        <div align="left" style=" font-family: 'Chewy';font-size: 22px;">
+        {% for user in users %}
+          {% if user.username == current_user.username%}
+          You are registered with Email : <span>{{user.email|upper}}</span> <br><br>
+          Your are registration id is {{user.id}}<br><br>
+          {% endif %}
+        {% endfor %}
 
-          Click on User / Group
+          Click on User / Group to start chatting
+        </div>
         </div>
 {% if 'room' in session %}
       <div class="table-responsive">
       <div class="w3-container w3-center w3-animate-bottom">
         <h1 class="font">CHAT BOXX</h1>
-        <textarea class ="hriks_style" id="chat" cols="50" rows="16" readonly></textarea>
+        <textarea style="font-family: 'Caveat';font-size: 20px;" class ="hriks_style" id="chat" cols="45" rows="14" readonly></textarea>
 <br>
         <input class="hriks_shadow hriks_style" id="text" size="35" style="height:40px" placeholder="Enter your message here">
           <a href="/" onclick="leave_room();" class="button curve">
