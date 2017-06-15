@@ -83,7 +83,6 @@ resize: none; font-family: Arial;
 }
 .user{font-family: 'Nosifer'; background:#333; color: white}
 
-
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -96,6 +95,10 @@ resize: none; font-family: Arial;
 <link href='https://fonts.googleapis.com/css?family=Nosifer' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Joti One' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Chewy' rel='stylesheet'>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -185,8 +188,17 @@ resize: none; font-family: Arial;
       </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}       
       <h1 class="page-header"><span style="font-family: Tangerine, serif; font-size: 22 "><b>Welcome {{ name|title }},<b></span></h1>
-
       <div class="row placeholders">
         <div class="col-xs-6 col-sm-6 placeholder">
         <div><img src="static/codeman.jpg" height="250" width="350"></div><br>
