@@ -9,9 +9,12 @@ from flask import session, request
 from sqlalchemy import or_
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+
 Bootstrap(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 login_manager.login_view = 'login'
 
 
@@ -35,7 +38,10 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
+                login_user(
+                    user,
+                    remember=form.remember.data
+                )
                 admin = User.query.filter_by(
                     username=str(user.username)
                 ).first()
@@ -66,8 +72,11 @@ def signup():
     if form.validate_on_submit():
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
-        new_user = User(username=form.username.data,
-                        email=form.email.data, password=hashed_password)
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password
+        )
         db.session.add(new_user)
         db.session.commit()
         admin = User.query.filter_by(
@@ -91,11 +100,13 @@ def signup():
 def dashboard():
     users = User.query.order_by(User.username)
     groups = Group.query.order_by(Group.username)
+
     groups_list = []
+
     for group in groups:
         groups_list.append(group.group)
+
     group_set = set(groups_list)
-    print group_set
     hriks(
         'Notification: Hey, Hi %s . Welcome ! click to chat.' % (
             current_user.username
@@ -115,6 +126,7 @@ def dashboard():
 def group():
     group_chat = request.form['submit']
     groups = Group.query.order_by(Group.group)
+
     for group in groups:
         if group.group == group_chat:
             session['room'] = str(group.group)
@@ -145,7 +157,8 @@ def add():
         all_users.append(str(user.username))
     add_users = list(set(all_users) - set(users_add))
     hriks(
-        'Notification: Hey, You are currently adding member to group %s' % (
+        'Notification: Hey, You are currently adding member to group "%s"' % (
+            group_name
         )
     )
     return render_template(
@@ -158,16 +171,20 @@ def add():
 @app.route('/add_member', methods=['GET', 'POST'])
 @login_required
 def add_member():
+    groups = Group.query.order_by(Group.group)
+
     if request.method == 'POST':
         group_name = str(request.form['group'])
         member = str(request.form['submit'])
+
         print member, group_name
-        groups = Group.query.order_by(Group.group)
+
         for group in groups:
             if group_name == group.group and member == group.username:
                 userd = 'YES'
             else:
                 userd = 'No'
+
         if userd == 'No':
             group_member = Group(
                 group=group_name,
@@ -175,13 +192,15 @@ def add_member():
             )
             db.session.add(group_member)
             db.session.commit()
+
         hriks(
-            'Notification: Hey, You had just added %s to %s' % (
+            'Notification: Hey, You had just added "%s" to "%s"' % (
                 member,
                 group_name
             )
         )
         return redirect(url_for('dashboard'))
+
     return redirect(url_for('dashboard'))
 
 
@@ -190,10 +209,14 @@ def add_member():
 def private_chat():
     users = User.query.order_by(User.username)
     groups = Group.query.order_by(Group.username)
+
     groups_list = []
+
     for group in groups:
         groups_list.append(group.group)
+
     group_set = set(groups_list)
+
     if request.method == 'POST':
         name = current_user.username
         session['name'] = str(name)
@@ -279,15 +302,17 @@ def group_chat():
                 group=group_name,
                 username=member
             )
+
             db.session.add(group_member2)
             db.session.commit()
+
+            hriks(
+                'Notification: You created a group with group name %s and added %s as member' % ( # noqa
+                    group_name,
+                    member
+                )
+            )
             return redirect(url_for('dashboard'))
-    hriks(
-        'Notification: You created a group with group name %s and added %s as member' % (    # noqa
-            group_name,
-            member
-        )
-    )
     return render_template(
         'group.html',
         form=form,
@@ -300,14 +325,17 @@ def group_chat():
 @login_required
 def logout():
     user = User.query.filter_by(username=str(current_user.username)).first()
+
     user.is_active = False
     db.session.commit()
     session.clear()
+
     hriks(
         'Notification: %s Successfully Logged out' % (
             current_user.username
         )
     )
+
     logout_user()
     return redirect(url_for('index'))
 
@@ -318,5 +346,6 @@ def pop():
     hriks(
         'Notification: Chat Box closed.'
     )
+
     session.pop('room', '')
     return redirect(url_for('dashboard'))
