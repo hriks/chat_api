@@ -39,4 +39,3 @@ def left(message):
             'msg': session.get('name') + ' has left the room.'
         }, room=room
     )
-

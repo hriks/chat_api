@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash as hriks
 from flask_bootstrap import Bootstrap
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager,\
@@ -43,10 +43,18 @@ def login():
                 db.session.commit()
                 session['logged'] = 'YES'
                 if current_user:
+                    hriks(
+                        'SUCCESS! Welcome, you are logged in %s' % (
+                            user.username
+                        )
+                    )
                     return redirect(url_for('dashboard'))
                 return redirect(url_for('login'))
-
-        return '<h1>Invalid username or password</h1>'
+        hriks(
+            'WARNING! Invalid Combination,\
+            Please check username and password'
+        )
+        return render_template('login.html', form=form)
 
     return render_template('login.html', form=form)
 
@@ -67,9 +75,14 @@ def signup():
         ).first()
         admin.is_active = True
         db.session.commit()
+        hriks(
+            'Notification: Hey, hi %s you are allset, just click and chat!' % (
+                new_user.username
+            )
+        )
 
         return redirect(url_for('dashboard'))
-    flash('Please Signup to view')
+    hriks('Please Signup to view')
     return render_template('signup.html', form=form)
 
 
@@ -83,6 +96,11 @@ def dashboard():
         groups_list.append(group.group)
     group_set = set(groups_list)
     print group_set
+    hriks(
+        'Notification: Hey, Hi %s . Welcome ! click to chat.' % (
+            current_user.username
+        )
+    )
     return render_template(
         'dashboard.html',
         name=current_user.username,
@@ -100,6 +118,12 @@ def group():
     for group in groups:
         if group.group == group_chat:
             session['room'] = str(group.group)
+    hriks(
+        'Notification: Hey, %s you just joined %s' % (
+            current_user.username,
+            session['room']
+        )
+    )
     return redirect(url_for('dashboard'))
 
 
@@ -108,9 +132,25 @@ def group():
 def add():
     users = User.query.order_by(User.username)
     group_name = request.form['submit']
+    groups = Group.query.order_by(Group.username)
+    users_add = []
+    for group in groups:
+        if group.group == group_name:
+            for user in users:
+                if user.username == group.username:
+                    users_add.append(str(user.username))
+                    continue
+    all_users = []
+    for user in users:
+        all_users.append(str(user.username))
+    add_users = list(set(all_users) - set(users_add))
+    hriks(
+        'Notification: Hey, You are currently adding member to group %s' % (
+        )
+    )
     return render_template(
         'add.html',
-        users=users,
+        users=add_users,
         group_name=group_name,
     )
 
@@ -135,6 +175,12 @@ def add_member():
             )
             db.session.add(group_member)
             db.session.commit()
+        hriks(
+            'Notification: Hey, You had just added %s to %s' % (
+                member,
+                group_name
+            )
+        )
         return redirect(url_for('dashboard'))
     return redirect(url_for('dashboard'))
 
@@ -194,6 +240,11 @@ def private_chat():
                     current_user.username)
             ):
                     session['room'] = str(user.id)
+    hriks(
+        'Notification: You opened chat box with %s' % (
+            room
+        )
+    )
     return render_template(
         'dashboard.html',
         name=current_user.username,
@@ -231,6 +282,12 @@ def group_chat():
             db.session.add(group_member2)
             db.session.commit()
             return redirect(url_for('dashboard'))
+    hriks(
+        'Notification: You created a group with group name %s and added %s as member' % (    # noqa
+            group_name,
+            member
+        )
+    )
     return render_template(
         'group.html',
         form=form,
@@ -245,13 +302,21 @@ def logout():
     user = User.query.filter_by(username=str(current_user.username)).first()
     user.is_active = False
     db.session.commit()
-    logout_user()
     session.clear()
+    hriks(
+        'Notification: %s Successfully Logged out' % (
+            current_user.username
+        )
+    )
+    logout_user()
     return redirect(url_for('index'))
 
 
 @app.route('/pop')
 @login_required
 def pop():
+    hriks(
+        'Notification: Chat Box closed.'
+    )
     session.pop('room', '')
     return redirect(url_for('dashboard'))
