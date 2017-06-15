@@ -9,8 +9,10 @@ from flask import session, request
 from sqlalchemy import or_
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+
 Bootstrap(app)
 login_manager = LoginManager()
+
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
@@ -75,6 +77,7 @@ def signup():
         ).first()
         admin.is_active = True
         db.session.commit()
+
         hriks(
             'Notification: Hey, hi %s you are allset, just click and chat!' % (
                 new_user.username
