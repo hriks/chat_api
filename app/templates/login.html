@@ -1,23 +1,11 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-
-{% block title %}
-Login
-{% endblock %}
-
+{% block title %}Login{% endblock %}
 {% block styles %}
 {{super()}}
 <style type="text/css">
-#myProgress {
-  width: 100%;
-  background-color: white;
-}
-
-#myBar {
-  width: 0%;
-  height: 5px;
-  background-color: blue;
-}
+#myProgress {width: 100%; background-color: white; }
+#myBar {width: 0%; height: 5px; background-color: blue;}
 </style>    
 <link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -34,16 +22,12 @@ function move() {
     } else {
       width++; 
       elem.style.width = width + '%'; 
-    }
-  }
-}
+    }}}
 </script>
 {% endblock %}
-
 {% block content %}
-    <div class="container">
-    <div id="myProgress"><div id="myBar"></div></div>
-    {% with messages = get_flashed_messages() %}
+    <div class="container"><div id="myProgress"><div id="myBar"></div></div>
+{% with messages = get_flashed_messages() %}
 {% if messages %}{% for message in messages %}
     <div class="alert alert-success alert-dismissable">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
@@ -51,7 +35,6 @@ function move() {
     </div>
 {% endfor %}{% endif %}
 {% endwith %}
-
       <form class="form-signin" method="POST" action="/login">
         <h2 class="form-signin-heading">Please sign in</h2>
         {{ form.hidden_tag() }}
@@ -60,6 +43,5 @@ function move() {
         {{ wtf.form_field(form.remember) }}
         <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="move()">Sign in</button>
       </form>
-
-    </div> <!-- /container -->
+</div>
 {% endblock %}
