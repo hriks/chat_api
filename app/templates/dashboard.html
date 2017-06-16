@@ -52,6 +52,8 @@ Dashboard
 {% endblock %}
 {% block styles %}
 {{super()}}
+<link rel="shortcut icon" href="{{ url_for('static',filename='ico.jpg') }}" type="image/x-icon">
+<meta name="description" content="">
 <style type="text/css">
 #myProgress {width: 100%; background-color: white;}
 #myBar { width: 0%; height: 5px; background-color: black;}
@@ -158,7 +160,7 @@ resize: none; font-family: Arial;
               <button class="button group w3-round-xxlarge" name="submit" value={{group}} type="submit" style="width: 120%" onclick="move()">{{ group|upper }}</button>
           </form></td><td>
           <form action = "add" method= POST >
-<button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" value={{group}} type="submit" onclick="move()">+</button>
+<button class="w3-button w3-circle w3-teal" name="submit" value={{group}} type="submit" onclick="move()">+</button>
           </form></td></tr></table></a></li>
 {% endfor %}
         <li><a href="{{ url_for('group_chat') }}"> <button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" type="submit" onclick="move()"><b>&#10133;</b></button></a></li>

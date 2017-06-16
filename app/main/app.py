@@ -310,7 +310,7 @@ def group_chat():
             db.session.commit()
 
             hriks(
-                'Notification: You created a group with group name %s and added %s as member' % ( # noqa
+                'Notification: You created a group with group name "%s" and added "%s" as member' % ( # noqa
                     group_name,
                     member
                 )
