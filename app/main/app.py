@@ -9,7 +9,7 @@ from flask import session, request
 from sqlalchemy import or_
 import settings
 
-app.config['SECRET_KEY'] = settings.os
+app.config['SECRET_KEY'] = settings.SECRET_KEY
 
 Bootstrap(app)
 

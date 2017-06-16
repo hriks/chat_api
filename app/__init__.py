@@ -2,13 +2,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_socketio import SocketIO
-from settings import os_uri
+from settings import CHAT_DATABASE_URI
 
 socketio = SocketIO()
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os_uri
+app.config['SQLALCHEMY_DATABASE_URI'] = CHAT_DATABASE_URI
 db = SQLAlchemy(app)
 
 

@@ -46,12 +46,16 @@ pip install -r requirements.txt
 ```
 ## NOTE
 
-Postgresql must be installed.
+You also have to export SECKET_KEY and CHAT_DATABASE_URI
+in your environment to run this app
+
+Postgresql must be installed to use postgresql as a DATABASE
 
 if not, install postgres and its server-side extensions
+USE ANY DATABASE BUT MAKE SURE YOU CHANGE CHAT_DATABASE_URI
 
 Run app by
- 
+
 ```
 python chat.py
 ```
