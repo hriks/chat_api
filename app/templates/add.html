@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
 #myProgress {width: 100%; background-color: white;}
-#myBar {width: 0%; height: 5px; background-color: blue;}
+#myBar {width: 0%; height: 5px; background-color: black;}
 input[type=text] {width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; border: none; background-color: #3CBC8D;
     color: white;}
 </style>
@@ -30,28 +30,23 @@ function move() {
 {% block content %}
 <div class="container">
 <div id="myProgress"><div id="myBar"></div></div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}{% for message in messages %}
-                <div class="alert alert-success alert-dismissable">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                    {{ message }}
-                </div>
-        {% endfor %}{% endif %}
-    {% endwith %}  
-  <form class="form-signin" method="POST" action="add_member">
-    <h2 class="form-signin-heading">Add New Member</h2>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for message in messages %}
+      <div class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+          {{ message }}
+      </div>
+    {% endfor %}{% endif %}
+  {% endwith %}  
+<form class="form-signin" method="POST" action="add_member">
+  <h2 class="form-signin-heading">Add New Member</h2>
     Group Name: <br>
-    <input type="text" name="group" value={{group_name}} readonly>
-    {% for user in users %}
-    <button class="btn btn-lg btn-primary btn-block" value={{user}} type="submit" name=submit onclick="move()">
-    Add {{user|upper}}
-    </button>
-    {% endfor %}
-    <br>
-    <br>
-    Note: Add one member to create a group later add other members
-    <br>
-    <p><p><a class="w3-btn w3-xlarge" href='/' onclick="move()"><i class="fa fa-home"></i></a></p>
-  </form>
+      <input type="text" name="group" value={{group_name}} readonly>
+{% for user in users %}
+<button class="btn btn-lg btn-primary btn-block" value={{user}} type="submit" name=submit onclick="move()">Add {{user|upper}}</button>
+{% endfor %}<br><br>
+Note: Add one member to create a group later add other members<br>
+<p><a class="w3-btn w3-xlarge" href='/' onclick="move()"><i class="fa fa-home"></i></a></p>
+</form>
 </div>
 {% endblock %}

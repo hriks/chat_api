@@ -7,8 +7,9 @@ from .. import app, User, db, Group, Group_user
 from forms import LoginForm, RegisterForm, GroupForm
 from flask import session, request
 from sqlalchemy import or_
+import settings
 
-app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config['SECRET_KEY'] = settings.os
 
 Bootstrap(app)
 

@@ -2,13 +2,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_socketio import SocketIO
-
+from settings import os_uri
 
 socketio = SocketIO()
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://bqlxjind:OtFzlf08n1g8WLnLd7vPFoHGB3DFGkcd@pellefant.db.elephantsql.com:5432/bqlxjind' # noqa
+app.config['SQLALCHEMY_DATABASE_URI'] = os_uri
 db = SQLAlchemy(app)
 
 
