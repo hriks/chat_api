@@ -37,6 +37,7 @@
   var id = setInterval(frame, 100);
   function frame() {
     if (width >= 100) {
+      width--;
       elem.style.width = width - '%';
     } else {
       width++; 
@@ -53,7 +54,7 @@ Dashboard
 {{super()}}
 <style type="text/css">
 #myProgress {width: 100%; background-color: white;}
-#myBar { width: 0%; height: 5px; background-color: blue;}
+#myBar { width: 0%; height: 5px; background-color: black;}
 .expand {width: 100px; height: 50px; background: red;
     -webkit-transition: width 0.50s, height 0.5s;
     transition: width 0.5s, height 0.5s;}
@@ -140,76 +141,57 @@ resize: none; font-family: Arial;
 </td>
 <td>
 {% if user.username == current_user.username %}
-            <button class="button group w3-round-xxlarge" name="submit" type="submit" style="width: 100px" onclick="move()">
-              {{user.username|upper}}
-            </button>
+<button class="button group w3-round-xxlarge" name="submit" type="submit" style="width: 100px" onclick="move()">{{user.username|upper}}
+</button>
 {% else %}
-            <form action="private_chat" method= POST >
-            <button class="button group w3-round-xxlarge" name="submit" value={{user.username}} type="submit" style="width: 100px" onclick="move()">{{user.username|upper}}</button></form>
+  <form action="private_chat" method= POST >
+    <button class="button group w3-round-xxlarge" name="submit" value={{user.username}} type="submit" style="width: 100px" onclick="move()">{{user.username|upper}}</button></form>
 {% endif %}
 </td></tr></table></a></li>
 {% endfor %}
-      </ul>
-      <ul class="nav nav-sidebar">
-        <li class="user"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
+  </ul><ul class="nav nav-sidebar">
+    <li class="user"><a href=""><b>Your Groups</b><span class="sr-only">(current)</span></a></li>
 {% for group in groups %}
-        <li style="font-family: 'Joti One';font-size: 22px;"><a>
-          <table>
-            <tr>
-              <td>
-                <form action = "group" method= POST >
-                  <button class="button group w3-round-xxlarge" name="submit" value={{group}} type="submit" style="width: 120%" onclick="move()">
-                    {{ group|upper }}
-                  </button>
-                </form>
-              </td>
-              <td>
-                <form action = "add" method= POST >
-                  <button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" value={{group}} type="submit" onclick="move()">
-                    +
-                  </button>
-                </form>
-              </td>
-            </tr>
-           </table>
-           </a>
-        </li>
+      <li style="font-family: 'Joti One';font-size: 22px;"><a>
+        <table><tr><td>
+          <form action = "group" method= POST >
+              <button class="button group w3-round-xxlarge" name="submit" value={{group}} type="submit" style="width: 120%" onclick="move()">{{ group|upper }}</button>
+          </form></td><td>
+          <form action = "add" method= POST >
+<button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" value={{group}} type="submit" onclick="move()">+</button>
+          </form></td></tr></table></a></li>
 {% endfor %}
         <li><a href="{{ url_for('group_chat') }}"> <button class="w3-button w3-xsmall w3-circle w3-teal" name="submit" type="submit" onclick="move()"><b>&#10133;</b></button></a></li>
-      </ul>
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  </ul></div>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div id="myProgress"><div id="myBar"></div>
+  </div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}{% for message in messages %}
+    <div class="alert alert-success alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">X</a>
+        {{ message }}
     </div>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}{% for message in messages %}
-            <div class="alert alert-success alert-dismissable">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">X</a>
-              {{ message }}
-            </div>
-        {% endfor %}{% endif %}{% endwith %}       
-      <h1 class="page-header"><span style="font-family: Tangerine, serif; font-size: 22 "><b>Welcome {{ name|title }},<b></span></h1>
-      <div class="row placeholders">
-        <div class="col-xs-6 col-sm-6 placeholder">
+{% endfor %}{% endif %}{% endwith %}       
+  <h1 class="page-header"><span style="font-family: Tangerine, serif; font-size: 22 "><b>Welcome {{ name|title }},<b></span></h1>
+    <div class="row placeholders">
+      <div class="col-xs-6 col-sm-6 placeholder">
         <div><img src="static/codeman.jpg" height="250" width="350"></div><br>
         <div align="left" style=" font-family: 'La Belle Aurore';font-size: 22px;">
 {% for user in users %}
 {% if user.username == current_user.username%}
-          You are registered with Email : <span style="font-family: 'Metrophobic'">{{user.email|upper}}</span> <br><br>
-          Your are registration id is {{user.id}}<br><br>
-          {% endif %}{% endfor %}
-          Click on User / Group to start chatting
-        </div></div>
+    You are registered with Email : <span style="font-family: 'Metrophobic'">{{user.email|upper}}</span> <br><br>
+    Your are registration id is {{user.id}}<br><br>
+{% endif %}{% endfor %}
+    Click on User / Group to start chatting
+</div></div>
 {% if 'room' in session %}
-      <div class="table-responsive">
-      <div class="w3-container w3-center w3-animate-bottom">
-        <h1 class="font">CHAT BOXX</h1>
-        <textarea style="font-family: 'Caveat';font-size: 20px;" class ="hriks_style" id="chat" cols="45" rows="14" readonly></textarea>
-<br>
-        <input class="hriks_shadow hriks_style" id="text" size="35" style="height:40px" placeholder="Enter your message here">
-          <a href="/" onclick="leave_room();" class="button curve">
-              close chat</a>
-      </div></div>
+  <div class="table-responsive"><div class="w3-container w3-center w3-animate-bottom">
+    <h1 class="font">CHAT BOXX</h1>
+    <textarea style="font-family: 'Caveat';font-size: 20px;" class ="hriks_style" id="chat" cols="45" rows="14" readonly></textarea><br>
+      <input class="hriks_shadow hriks_style" id="text" size="35" style="height:40px" placeholder="Enter your message here">
+        <a href="/" onclick="leave_room();" class="button curve">close chat</a>
+  </div></div>
 {% endif %}
     </div></div></div></div>
 {% endblock %}

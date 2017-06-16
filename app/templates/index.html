@@ -1,14 +1,9 @@
 {% extends "bootstrap/base.html" %}
-
-{% block title %}
-Demo App
-{% endblock %}
-
+{% block title %}Demo App{% endblock %}
 {% block styles %}
 {{super()}}
 <style type="text/css">
 .hriks{font-family: 'Bungee Inline';font-size: 14px;}
-
 </style>
 <link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
 <link href='https://fonts.googleapis.com/css?family=Bungee Inline' rel='stylesheet'>
@@ -20,7 +15,6 @@ Demo App
 <link href='https://fonts.googleapis.com/css?family=Engagement' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Fontdiner Swanky' rel='stylesheet'>
 {% endblock %}
-
 {% block content %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -42,24 +36,18 @@ Demo App
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-
     <div class="container">
       {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
+        {% if messages %}{% for message in messages %}
             <div class="alert alert-danger alert-dismissable">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             {{ message }}
             </div>
-          {% endfor %}
-       {% endif %}
+        {% endfor %}{% endif %}
       {% endwith %}
-
       <div class="starter-template">
         <div><img src="static/index_cat.jpg" height="250" width="350"></div><br>
         <h1 style="font-family: 'Engagement'">AndroZDi Chat API</h1>
         <p class="lead" style="font-family: 'Engagement'">Register or Login to start chatting with connected friends</p>
-      </div>
-
-    </div><!-- /.container -->
+      </div></div>
 {% endblock %}
