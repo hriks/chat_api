@@ -1,9 +1,5 @@
 {% extends "bootstrap/base.html" %}
-
-{% block title %}
-Add Member
-{% endblock %}
-
+{% block title %}Add Member{% endblock %}
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
@@ -13,26 +9,10 @@ Add Member
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
-#myProgress {
-  width: 100%;
-  background-color: white;
-}
-
-#myBar {
-  width: 0%;
-  height: 5px;
-  background-color: blue;
-}
-input[type=text] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: none;
-    background-color: #3CBC8D;
-    color: white;
-}
-</style>
+#myProgress {width: 100%; background-color: white;}
+#myBar {width: 0%; height: 5px; background-color: blue;}
+input[type=text] {width: 100%; padding: 12px 20px; margin: 8px 0; box-sizing: border-box; border: none; background-color: #3CBC8D;
+    color: white;}
 </style>
 <script>
 function move() {
@@ -44,25 +24,19 @@ function move() {
       clearInterval(id);
     } else {
       width++; 
-      elem.style.width = width + '%'; 
-    }
-  }
-}
+      elem.style.width = width + '%'; }}}
 </script>
 {% endblock %}
-
 {% block content %}
 <div class="container">
 <div id="myProgress"><div id="myBar"></div></div>
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
+        {% if messages %}{% for message in messages %}
                 <div class="alert alert-success alert-dismissable">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
                     {{ message }}
                 </div>
-            {% endfor %}
-        {% endif %}
+        {% endfor %}{% endif %}
     {% endwith %}  
   <form class="form-signin" method="POST" action="add_member">
     <h2 class="form-signin-heading">Add New Member</h2>
