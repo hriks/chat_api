@@ -1,4 +1,4 @@
-# chat_api (AndroZDI_Chat)
+# Chat_api (AndroZDI_Chat)
 =======================================================================================================================
 
 Chat API which is able to provide capabilities to chat between individuals or groups.
@@ -11,7 +11,7 @@ Allowing a users to send and recieve messages
 # How to install ?
 There are two ways to install.
 
-# You can install manually intall library that are requied to run this APP
+# You can install manually install library that are requied to run this APP
 
 
 ### The pythonista way
