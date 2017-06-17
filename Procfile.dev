@@ -1,6 +1,0 @@
-# Procfile.dev - development
-
-# Use the Flask development server.
-web: export CHAT_DATABASE_URI=postgres://bqlxjind:OtFzlf08n1g8WLnLd7vPFoHGB3DFGkcd@pellefant.db.elephantsql.com:5432/bqlxjind
-web: export SECRETKEY='76878898798'
-web: python chat.py
