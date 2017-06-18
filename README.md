@@ -54,6 +54,11 @@ Postgresql must be installed to use postgresql as a DATABASE
 if not, install postgres and its server-side extensions
 USE ANY DATABASE BUT MAKE SURE YOU CHANGE CHAT_DATABASE_URI
 
+```export CHAT_DATABASE_URI='yours databse URI'
+```
+```export SECRET_KEY='YOUR SECRET KEY'
+```
+
 Run app by
 
 ```
