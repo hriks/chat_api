@@ -20,11 +20,13 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
+# Flask_login_manager
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+# Default route to index
 @app.route('/')
 def index():
     if 'logged' in session:
@@ -32,6 +34,9 @@ def index():
     return render_template('index.html')
 
 
+# Login route, This methods accepts both GET and POST
+# requests, it renders login form page using GET request
+# and submit form using POST request
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -56,7 +61,7 @@ def login():
                             user.username
                         )
                     )
-                    return redirect(url_for('dashboard'))
+                    return redirect(url_for('index'))
                 return redirect(url_for('login'))
         hriks(
             'WARNING! Invalid Combination,\
@@ -67,6 +72,9 @@ def login():
     return render_template('login.html', form=form)
 
 
+# This is Signup form route, it accepts both GET and POST
+# request. It renders signup form page using GET and submit
+# form using POST request
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
@@ -98,6 +106,10 @@ def signup():
     return render_template('signup.html', form=form)
 
 
+# This is Dashboard route. It is the main page of Chat_api
+# This servers as centre for all the actions taken.
+# Shows user online/offline and Able to create a new group
+# Add members to the group. Main link to all routes
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
@@ -124,6 +136,8 @@ def dashboard():
     )
 
 
+# This route allow user to open Chat Box and let users
+# chat with all other members using chat box
 @app.route('/group', methods=['GET', 'POST'])
 @login_required
 def group():
@@ -142,6 +156,9 @@ def group():
     return redirect(url_for('dashboard'))
 
 
+# This route allows to add member to the group
+# this logic also filter group according the user
+# already present.
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
@@ -171,6 +188,9 @@ def add():
     )
 
 
+# This user allows to add new member to the group
+# Group Name will be picked automatically when
+# clicked on group name
 @app.route('/add_member', methods=['GET', 'POST'])
 @login_required
 def add_member():
@@ -207,6 +227,8 @@ def add_member():
     return redirect(url_for('dashboard'))
 
 
+# this route allows to open a new private
+# chat box with user clicked to chat with.
 @app.route('/private_chat', methods=['GET', 'POST'])
 @login_required
 def private_chat():
@@ -230,6 +252,7 @@ def private_chat():
                 Group_user.user2 == current_user.username
             )
         )
+        session['userd'] = 'No'
         for user in groups_users:
             if (
                 str(user.user1) == str(
@@ -238,25 +261,25 @@ def private_chat():
                     user.user1) == room and str(user.user2) == str(
                     current_user.username)
             ):
-                userd = 'YES'
+                session['userd'] = 'YES'
                 session['room'] = str(user.id)
                 break
             else:
-                userd = 'No'
-        if userd == 'No':
-            new_group = Group_user(
-                user2=session['name'],
-                user1=room
-            )
-            db.session.add(new_group)
-            db.session.commit()
-            groups_users = Group_user.query.filter(
-                or_(
-                    Group_user.user1 == current_user.username,
-                    Group_user.user2 == current_user.username
+                session['userd'] = 'No'
+        if 'userd' in session:
+            if session['userd']== 'No':
+                new_group = Group_user(
+                    user2=session['name'],
+                    user1=room
                 )
-            )
-            session['room'] = str(user.id)
+                db.session.add(new_group)
+                db.session.commit()
+                groups_users = Group_user.query.filter(
+                    or_(
+                        Group_user.user1 == current_user.username,
+                        Group_user.user2 == current_user.username
+                    )
+                )
         for user in groups_users:
             if (
                 str(user.user1) == str(
@@ -280,6 +303,9 @@ def private_chat():
     )
 
 
+# This method allows to create a new group
+# currently only person can be added at a time
+# TODO : able to add multiple user at a time
 @app.route('/group_chat', methods=['GET', 'POST'])
 @login_required
 def group_chat():
@@ -324,6 +350,8 @@ def group_chat():
     )
 
 
+# This route logout the user showing a message.
+# and redirect to index page
 @app.route('/logout')
 @login_required
 def logout():
@@ -340,9 +368,13 @@ def logout():
     )
 
     logout_user()
+    # Logout user
     return redirect(url_for('index'))
 
 
+# When ever this method is chat box will be closed
+# and token for the group/user chatting will be
+# dropped.
 @app.route('/pop')
 @login_required
 def pop():
