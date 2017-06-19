@@ -267,7 +267,7 @@ def private_chat():
             else:
                 session['userd'] = 'No'
         if 'userd' in session:
-            if session['userd']== 'No':
+            if session['userd'] == 'No':
                 new_group = Group_user(
                     user2=session['name'],
                     user1=room
