@@ -1,7 +1,7 @@
 # Chat_api (AndroZDI_Chat)
-=======================================================================================================================
+================================================================
 
-Chat API which is able to provide capabilities to chat between individuals or groups.
+Chat API which is able to provide, chat between individuals or groups.
 Integrated with Jinja2 for a cool user interface and that would use the API to allow users
 to communicate with others via one on one or group mode in real-time.
 
@@ -46,19 +46,26 @@ pip install -r requirements.txt
 ```
 ## NOTE
 
-You also have to export SECKET_KEY and CHAT_DATABASE_URI
+You also have to export SECKET_KEY and CHAT_DATABASE_URI and DB_NAME
+
 in your environment to run this app
 
 Postgresql must be installed to use postgresql as a DATABASE
+Any RDBMS canbe used to run this app.
 
 if not, install postgres and its server-side extensions
 USE ANY DATABASE BUT MAKE SURE YOU CHANGE CHAT_DATABASE_URI
 
 ```
-export CHAT_DATABASE_URI='yours databse URI'
+export SECRET_KEY='YOUR SECRET KEY'
+
+export CHAT_DATABASE_URI=''postgresql://username:password@localhost:5432'
 ```
 ```
 export SECRET_KEY='YOUR SECRET KEY'
+```
+```
+export DB_NAME="Your DB_NAME"
 ```
 
 Run app by
@@ -66,4 +73,21 @@ Run app by
 ```
 python chat.py
 ```
-### 
+
+## Common Isuues
+
+```
+KEY_ERROR
+```
+This can be as you had not export environment variables like SECRET_KEY
+or DB_NAME
+
+```
+OperationalError: (psycopg2.OperationalError) FATAL:  database "/chat_api" does not exist
+```
+
+This can be due to added '/' at the end of CHAT_DATABASE_URI
+Correct format for URI
+```
+export CHAT_DATABASE_URI=''postgresql://username:password@localhost:5432'
+```

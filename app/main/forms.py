@@ -4,6 +4,8 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 
 
+# Login form. This is displayed when user
+# tried to login
 class LoginForm(Form):
     username = StringField(
         'username',
@@ -16,6 +18,8 @@ class LoginForm(Form):
     remember = BooleanField('remember me')
 
 
+# Registration form. This is dislayed when a
+# a Guest tries to registers
 class RegisterForm(Form):
     email = StringField(
         'email', validators=[InputRequired(), Email(
@@ -31,6 +35,8 @@ class RegisterForm(Form):
     )
 
 
+# This open the group form when user
+# tries to create a new group
 class GroupForm(Form):
     groupname = StringField(
         'Group Name', validators=[
