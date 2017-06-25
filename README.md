@@ -91,3 +91,15 @@ Correct format for URI
 ```
 export CHAT_DATABASE_URI=''postgresql://username:password@localhost:5432'
 ```
+To run on locally first, have to setup database
+open python in terminal
+```
+from app import db
+```
+This will import models, then
+```
+db.create_all()
+```
+call create_all function.
+This will create tables requied to run.
+Happy coding
