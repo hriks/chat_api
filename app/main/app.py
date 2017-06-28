@@ -96,7 +96,7 @@ def signup():
         db.session.commit()
 
         hriks(
-            'Notification: Hey, hi %s you are allset, just click and chat!' % (
+            'Notification: Hey, hi %s you are all set, just click and chat!' % (
                 new_user.username
             )
         )
@@ -313,13 +313,11 @@ def group_chat():
     users = User.query.order_by(User.username)
 
     if form.validate_on_submit():
+    # validate form on submit
         if request.method == 'POST':
             name = str(current_user.username)
-            print name
             group_name = str(request.form['groupname'])
-            print group_name
             member = str(request.form['submit'])
-            print member
             group_member1 = Group(
                 group=group_name,
                 username=name
@@ -360,6 +358,8 @@ def logout():
     user.is_active = False
     db.session.commit()
     session.clear()
+    # Clear's chatBox session,
+    # this closes the chatBOX
 
     hriks(
         'Notification: %s Successfully Logged out' % (
@@ -368,7 +368,8 @@ def logout():
     )
 
     logout_user()
-    # Logout user
+    # logout_user() is called which will
+    # Logout user 
     return redirect(url_for('index'))
 
 
@@ -383,4 +384,6 @@ def pop():
     )
 
     session.pop('room', '')
+    # Clears the room and display's
+    # closes chatbox, redirects to dashboard
     return redirect(url_for('dashboard'))
