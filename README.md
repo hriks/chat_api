@@ -59,7 +59,7 @@ USE ANY DATABASE BUT MAKE SURE YOU CHANGE CHAT_DATABASE_URI
 ```
 export SECRET_KEY='YOUR SECRET KEY'
 
-export CHAT_DATABASE_URI=''postgresql://username:password@localhost:5432'
+export CHAT_DATABASE_URI='postgresql://username:password@localhost:5432'
 ```
 ```
 export SECRET_KEY='YOUR SECRET KEY'
@@ -89,7 +89,7 @@ OperationalError: (psycopg2.OperationalError) FATAL:  database "/chat_api" does 
 This can be due to added '/' at the end of CHAT_DATABASE_URI
 Correct format for URI
 ```
-export CHAT_DATABASE_URI=''postgresql://username:password@localhost:5432'
+export CHAT_DATABASE_URI='postgresql://username:password@localhost:5432'
 ```
 To run on locally first, have to setup database
 open python in terminal

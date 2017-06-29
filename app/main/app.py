@@ -9,6 +9,7 @@ from flask import session, request
 from sqlalchemy import or_
 import settings
 from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
 app.config['SECRET_KEY'] = settings.SECRET_KEY
 
@@ -32,6 +33,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 login_manager.login_view = 'login'
+
+serializer = settings.serializer
+s = URLSafeTimedSerializer(serializer)
 
 
 # Flask_login_manager
@@ -59,25 +63,26 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
-            if check_password_hash(user.password, form.password.data):
-                login_user(
-                    user,
-                    remember=form.remember.data
-                )
-                admin = User.query.filter_by(
-                    username=str(user.username)
-                ).first()
-                admin.is_active = True
-                db.session.commit()
-                session['logged'] = 'YES'
-                if current_user:
-                    hriks(
-                        'SUCCESS! Welcome, you are logged in %s' % (
-                            user.username
-                        )
+            if user.confirmed_email:
+                if check_password_hash(user.password, form.password.data):
+                    login_user(
+                        user,
+                        remember=form.remember.data
                     )
-                    return redirect(url_for('index'))
-                return redirect(url_for('login'))
+                    admin = User.query.filter_by(
+                        username=str(user.username)
+                    ).first()
+                    admin.is_active = True
+                    db.session.commit()
+                    session['logged'] = 'YES'
+                    if current_user:
+                        hriks(
+                            'SUCCESS! Welcome, you are logged in %s' % (
+                                user.username
+                            )
+                        )
+                        return redirect(url_for('index'))
+                    return redirect(url_for('login'))
         hriks(
             'WARNING! Invalid Combination,\
             Please check username and password'
@@ -95,6 +100,19 @@ def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
+        email = form.email.data
+        token = s.dumps(email, salt='email-confirm')
+        sender = 'care.androzdi@gmail.com'
+        msg = Message(
+            'Confirmation Email', sender=sender,
+            recipients=[email]
+        )
+        link = url_for(
+            'confirm_email', token=token,
+            _external=True
+        )
+        msg.body = 'Please click on %s to confirm ' % (link)
+        mail.send(msg)
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
         new_user = User(
@@ -119,6 +137,27 @@ def signup():
         return redirect(url_for('dashboard'))
     hriks('Please Signup to view')
     return render_template('signup.html', form=form)
+
+
+@app.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=7200)
+        user = User.query.filter_by(email=str(email)).first()
+        user.confirmed_email = True
+        db.session.commit()
+        hriks(
+            'Congrats Your Email ID %s has been verified. Now, You can login' %(
+                email
+            )
+        )
+        return redirect(url_for('login'))
+
+    except Exception as e:
+        hriks(
+            'Opps! something went wrong! may be session expired'
+        )
+        return redirect(url_for('login'))
 
 
 # This is Dashboard route. It is the main page of Chat_api

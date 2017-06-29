@@ -6,7 +6,10 @@ try:
 except Exception as e:
     raise e
 
-
+# SETUP mail-server using environment variables
+# export all in your running environment.
+# This will automatically fetch value and provide
+# to app
 try:
 	MAIL_SERVER = os.environ["MAILSERVER"]
 	MAIL_USERNAME = os.environ["MAILUSERNAME"]
@@ -14,5 +17,11 @@ try:
 	MAIL_PORT= os.environ["PORT"]
 	MAIL_USE_SSL = True
 	MAIL_USE_TSL = False
+except Exception as e:
+	raise e
+	# Raises exception if any error is caused
+
+try:
+	serializer = os.environ['serial']
 except Exception as e:
 	raise e
