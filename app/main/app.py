@@ -40,6 +40,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    # Shows login form
 
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
