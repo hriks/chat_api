@@ -111,7 +111,15 @@ def signup():
             'confirm_email', token=token,
             _external=True
         )
-        msg.body = 'Please click on %s to confirm ' % (link)
+        first_line = ",\n\nWelcome to Chat API."
+        second_line = "\n\nPlease confirm your email to use chatapi."
+        thord_line = "\n\nconfirm  here %s " % (link)
+        fourth_line = "\n\n\n\n\nThankyou hriks,"
+        final = "\n\n\n\n\n\n\n\nPlease dont reply this \
+        is automated genrated mail"
+        message_send = "Hii " + form.username.data + first_line + \
+            second_line + thord_line + fourth_line + final
+        msg.body = message_send
         mail.send(msg)
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
@@ -129,7 +137,8 @@ def signup():
         db.session.commit()
 
         hriks(
-            'Notification: Hey, hi %s you are all set, just click and chat!' % (
+            'Notification: Hey, hi %s you are all set,\
+            just click and chat!' % (
                 new_user.username
             )
         )
@@ -142,18 +151,33 @@ def signup():
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
     try:
-        email = s.loads(token, salt='email-confirm', max_age=7200)
+        email = s.loads(token, salt='email-confirm', max_age=86400)
         user = User.query.filter_by(email=str(email)).first()
         user.confirmed_email = True
+        sender = 'care.androzdi@gmail.com'
+        msg = Message(
+            'Confirmation Email', sender=sender,
+            recipients=[email]
+        )
+        first_line = ",\n\nWelcome to Chat API."
+        second_line = "\n\nThankyou for verification."
+        thord_line = "\n\nYour USERNAME: %s <br>" % user.username
+        fourth_line = "\n\n\n\n\nThankyou hriks,"
+        final = "<\n\n\n\n\n\n\n\n\n\n\n\nPlease dont reply this \
+        is automated genrated mail"
+        message_send = "Hii " + user.username + first_line + \
+            second_line + thord_line + fourth_line + final
+        msg.body = message_send
+        mail.send(msg)
         db.session.commit()
         hriks(
-            'Congrats Your Email ID %s has been verified. Now, You can login' %(
+            'Congrats Your Email ID %s has been verified. Now,\
+            You can login' % (
                 email
             )
         )
         return redirect(url_for('login'))
-
-    except Exception as e:
+    except Exception:
         hriks(
             'Opps! something went wrong! may be session expired'
         )
@@ -342,7 +366,7 @@ def private_chat():
                     user.user1) == room and str(user.user2) == str(
                     current_user.username)
             ):
-                    session['room'] = str(user.id)
+                session['room'] = str(user.id)
     hriks(
         'Notification: You opened chat box with %s' % (
             room
@@ -367,7 +391,7 @@ def group_chat():
     users = User.query.order_by(User.username)
 
     if form.validate_on_submit():
-    # validate form on submit
+        # validate form on submit
         if request.method == 'POST':
             name = str(current_user.username)
             group_name = str(request.form['groupname'])
@@ -388,7 +412,7 @@ def group_chat():
             db.session.commit()
 
             hriks(
-                'Notification: You created a group with group name "%s" and added "%s" as member' % ( # noqa
+                'Notification: You created a group with group name "%s" and added "%s" as member' % (  # noqa
                     group_name,
                     member
                 )
@@ -423,7 +447,7 @@ def logout():
 
     logout_user()
     # logout_user() is called which will
-    # Logout user 
+    # Logout user
     return redirect(url_for('index'))
 
 
