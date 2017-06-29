@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
     is_active = db.Column(db.Boolean, unique=False, default=False)
+    confirmed_email = db.Column(db.Boolean, unique=False, default=False)
     usernames = db.relationship('Group_user', backref='owner', lazy='dynamic')
 
 
