@@ -8,10 +8,24 @@ from forms import LoginForm, RegisterForm, GroupForm
 from flask import session, request
 from sqlalchemy import or_
 import settings
+from flask_mail import Mail, Message
 
 app.config['SECRET_KEY'] = settings.SECRET_KEY
 
 Bootstrap(app)
+
+# Setup mail server for sending confirmation
+# Link to verify user.
+
+app.config['MAIL_SERVER'] = settings.MAIL_SERVER
+app.config['MAIL_PORT'] = settings.MAIL_PORT
+app.config['MAIL_USE_TSL'] = settings.MAIL_USE_TSL
+app.config['MAIL_USE_SSL'] = settings.MAIL_USE_SSL
+app.config['MAIL_USERNAME'] = settings.MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = settings.MAIL_PASSWORD
+
+# setup mail service with app
+mail = Mail(app)
 
 login_manager = LoginManager()
 
