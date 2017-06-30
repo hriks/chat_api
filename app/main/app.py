@@ -55,6 +55,8 @@ def index():
 # Login route, This methods accepts both GET and POST
 # requests, it renders login form page using GET request
 # and submit form using POST request
+# To do: resend confirmation email
+# To do: forgot password
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -94,7 +96,9 @@ def login():
 
 # This is Signup form route, it accepts both GET and POST
 # request. It renders signup form page using GET and submit
-# form using POST request
+# form using POST request.
+# This method also send confirm mail to user
+# clicking on which user needs to verify his identity
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
@@ -114,13 +118,15 @@ def signup():
         first_line = ",\n\nWelcome to Chat API."
         second_line = "\n\nPlease confirm your email to use chatapi."
         thord_line = "\n\nconfirm  here %s " % (link)
-        fourth_line = "\n\n\n\n\nThankyou hriks,"
-        final = "\n\n\n\n\n\n\n\nPlease dont reply this \
-        is automated genrated mail"
+        fourth_line = "\n\n\n\n\nRegards,"
+        fifth_line = "\n\n\n\n\nhriks,"
+        final = "\n\n\n\n\n\n\n\nPlease dont reply this is automated genrated mail" # noqa
         message_send = "Hii " + form.username.data + first_line + \
-            second_line + thord_line + fourth_line + final
+            second_line + thord_line + fourth_line + fifth_line + final
         msg.body = message_send
+        # Message Body
         mail.send(msg)
+        # Send's Mail to the emailid entered
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
         new_user = User(
@@ -148,6 +154,9 @@ def signup():
     return render_template('signup.html', form=form)
 
 
+# This url is confirm url,
+# url is send to user when he registers
+# on confimation he would be able to login
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
     try:
@@ -161,12 +170,12 @@ def confirm_email(token):
         )
         first_line = ",\n\nWelcome to Chat API."
         second_line = "\n\nThankyou for verification."
-        thord_line = "\n\nYour USERNAME: %s <br>" % user.username
-        fourth_line = "\n\n\n\n\nThankyou hriks,"
-        final = "<\n\n\n\n\n\n\n\n\n\n\n\nPlease dont reply this \
-        is automated genrated mail"
+        thord_line = "\n\nYour USERNAME: %s" % user.username
+        fourth_line = "\n\n\n\n\nRegards,"
+        fifth_line = "\n\n\n\n\nhriks,"
+        final = "\n\n\n\n\n\n\n\nPlease dont reply this is automated genrated mail" # noqa
         message_send = "Hii " + user.username + first_line + \
-            second_line + thord_line + fourth_line + final
+            second_line + thord_line + fourth_line + fifth_line + final
         msg.body = message_send
         mail.send(msg)
         db.session.commit()
