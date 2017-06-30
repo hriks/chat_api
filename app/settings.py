@@ -13,4 +13,3 @@ except Exception as e:
     raise e
 
 CHAT_DATABASE_URI = DATABASE_URI + '/' + DB_NAME
-# CHAT_DATABASE_URI 
