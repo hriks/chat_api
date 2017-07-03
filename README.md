@@ -100,6 +100,8 @@ This will import models, then
 ```
 db.create_all()
 ```
-call create_all function.
+```
+call create_all function
+```
 This will create tables requied to run.
 Happy coding
